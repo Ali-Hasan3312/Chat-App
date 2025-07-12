@@ -1,8 +1,9 @@
 import Message from "../models/message.js";
+import User from "../models/user.js";
 
 
 
-const getAllMessages = async (req, res) => {
+export const getAllMessages = async (req, res) => {
     try {
         const messages = await Message.find().sort({ timestamp: 1})
         res.status(200).json(messages);
@@ -12,4 +13,38 @@ const getAllMessages = async (req, res) => {
     }
 }
 
-export {getAllMessages}
+export const getAllUsersForSidebar = async(req, res)=>{
+    try {
+        const loggedInUserId = req.user._id;
+        const filteredUsers = await User.find({_id: {$ne: loggedInUserId}}).select("-password")
+        res.status(201).json(filteredUsers)
+    } catch (error) {
+        console.error("Error in getUsers for sidebar")
+        res.status(500).json({
+            error: error.message
+        })
+    }
+}
+
+export const getMessages = async(req, res)=>{
+    try {
+        const { id: userToChatId}  = req.params;
+        const myId = req.user._id;
+        const messages = await Message.find({
+            $or: [
+                { senderId: myId, receiverId: userToChatId},
+                { senderId: userToChatId, receiverId: myId}
+            ]
+        })
+        res.status(200).json(messages)
+    } catch (error) {
+        console.error("Error in getMessages")
+        res.status(500).json({
+            error: error.message
+        })    
+    }
+}
+
+export const sendMessage = async (req, res)=>{
+    
+}
