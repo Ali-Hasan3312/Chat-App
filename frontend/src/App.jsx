@@ -1,54 +1,40 @@
-import { useEffect, useState } from "react";
-import io from "socket.io-client";
-import axios from "axios";
-
-const socket = io("http://localhost:5000");
+import { Navigate, Route, Routes } from "react-router-dom";
+import Navbar from "./components/Navbar";
+import HomePage from "./pages/HomePage";
+import SignupPage from "./pages/SignupPage";
+import LoginPage from "./pages/LoginPage";
+import SettingsPage from "./pages/SettingsPage";
+import ProfilePage from "./pages/ProfilePage";
+import { useAuthStore } from "./store/useAuthStore";
+import { useEffect } from "react";
+import {Loader}  from "lucide-react"
+import { Toaster } from "react-hot-toast";
 
 function App() {
-  const [user, setUser] = useState("User " + Math.floor(Math.random() * 1000));
-  const [text, setText] = useState("");
-  const [messages, setMessages] = useState([]);
+  const { authUser, checkAuth, isCheckingAuth} = useAuthStore()
+  useEffect(()=>{
+    checkAuth()
+  },[checkAuth])
 
-   const sendMessage = () => {
-    if (text.trim()) {
-      socket.emit("chatMessage", { user, text });
-    }
-    // setText("");
-  };
-  useEffect(() => {
-    // Load previous messages
-    axios.get("http://localhost:5000/api/messages").then((res) => {
-      setMessages(res.data);
-    });
-
-    // Listen for new messages
-    socket.on("chatMessage", (msg) => {
-      setMessages((prev) => [...prev, msg]);
-    });
-
-    // return () => socket.disconnect();
-  }, []);
-
- 
-
-  return (
-    <div style={{ padding: 20 }}>
-      <h2>Chat as {user}</h2>
-      <div style={{ maxHeight: "300px", overflowY: "auto", border: "1px solid gray", padding: 10 }}>
-        {messages.map((msg, idx) => (
-          <div key={idx}>
-            <strong>{msg.user}: </strong>{msg.text}
-          </div>
-        ))}
-      </div>
-      <input
-        type="text"
-        value={text}
-        onChange={(e) => setText(e.target.value)}
-        placeholder="Type a message..."
-      />
-      <button onClick={sendMessage}>Send</button>
+  console.log({authUser});
+  if(isCheckingAuth && !authUser) return (
+    <div className="flex items-center justify-center h-screen">
+      <Loader className="size-10 animate-spin" />
     </div>
+  )
+  
+  return (
+   <>
+   <Navbar />
+   <Routes>
+    <Route path="/" element={authUser? <HomePage /> : <Navigate to={"/login"} />} />
+    <Route path="/signup" element={!authUser? <SignupPage /> : <Navigate to={"/"} />} />
+    <Route path="/login" element={!authUser ? <LoginPage /> : <Navigate to={"/"} />} />
+    <Route path="/settings" element={authUser ? <SettingsPage /> : <Navigate to={"/login"} />} />
+    <Route path="/profile" element={authUser? <ProfilePage />: <Navigate to={"/login"} />} />
+   </Routes>
+    <Toaster />
+   </>
   );
 }
 
