@@ -5,8 +5,8 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "dev": "supervisor app.js",
-    "start": "node app.js"
+    "dev": "supervisor index.js",
+    "start": "node index.js"
   },
   "keywords": [],
   "author": "",
