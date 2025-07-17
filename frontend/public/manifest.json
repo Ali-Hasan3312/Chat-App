@@ -1,0 +1,22 @@
+{
+  "name": "Chat App",
+  "short_name": "ChatApp",
+  "description": "A modern Chat application",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#61dafb",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "http://res.cloudinary.com/dv0yscnct/image/upload/v1752645238/die5jsf4sb7sicrswwsv.jpg",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "http://res.cloudinary.com/dv0yscnct/image/upload/v1752645238/die5jsf4sb7sicrswwsv.jpg",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
