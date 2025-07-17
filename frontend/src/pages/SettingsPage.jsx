@@ -95,7 +95,7 @@ const SettingsPage = () => {
                   <div className="flex gap-2">
                     <input
                       type="text"
-                      className="input input-bordered flex-1 text-sm h-10"
+                      className="input focus-within:outline-none transition-all duration-300 ease-in flex-1 text-sm h-10"
                       placeholder="Type a message..."
                       value="This is a preview"
                       readOnly

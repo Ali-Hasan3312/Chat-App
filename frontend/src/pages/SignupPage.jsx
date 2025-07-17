@@ -61,7 +61,7 @@ const SignupPage = () => {
          </div>
          <input
           type="text"
-          className={`input input-bordered w-full pl-10 focus:border-none`}
+          className={`input input-bordered w-full pl-10 focus-within:outline-none transition-all duration-300 ease-in`}
           placeholder='John Doe'
           value={formData?.fullName}
           onChange={(e)=> setFormData({ ...formData, fullName: e.target.value})}
@@ -78,7 +78,7 @@ const SignupPage = () => {
          </div>
          <input
           type="email"
-          className={`input input-bordered w-full pl-10`}
+          className={`input w-full pl-10 focus-within:outline-none transition-all duration-300 ease-in`}
           placeholder='you@example.com'
           value={formData?.email}
           onChange={(e)=> setFormData({ ...formData, email: e.target.value})}
@@ -95,7 +95,7 @@ const SignupPage = () => {
          </div>
          <input
           type={showPassword? 'text' : 'password'}
-          className={`input input-bordered w-full pl-10`}
+          className={`input w-full pl-10 focus-within:outline-none transition-all duration-300 ease-in`}
           placeholder={showPassword? '123456789' : '•••••••••'}
           value={formData?.password}
           onChange={(e)=> setFormData({ ...formData, password: e.target.value})}
@@ -106,9 +106,9 @@ const SignupPage = () => {
           onClick={()=> setShowPassword(!showPassword)}
           >
            {showPassword? (
-            <EyeOff />
+            <EyeOff className="h-5 w-5 text-base-content/40" />
            ) : (
-            <Eye />
+            <Eye className="h-5 w-5 text-base-content/40" />
            )}
           </button>
         </div>
