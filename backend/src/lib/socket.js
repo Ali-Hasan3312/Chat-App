@@ -38,7 +38,10 @@ io.on("connection", (socket)=>{
 
 function emitOnlineUsers() {
     io.emit("getOnlineUsers", Array.from(userSocketMap.keys()));
-    console.log("userSocketMap :", userSocketMap);
+}
+
+export function getReceiverSocketId(userId){
+    return userSocketMap.get(userId)
 }
 
 export { io, server, app}
