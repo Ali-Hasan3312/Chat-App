@@ -1,13 +1,12 @@
+import cookieParser from 'cookie-parser';
+import cors from 'cors';
+import dotenv from 'dotenv';
 import express from 'express';
+import path from 'path';
+import { connectDB } from './src/db/database.js';
+import { app, server } from './src/lib/socket.js';
 import authRoutes from './src/routes/auth.js';
 import messageRoutes from './src/routes/message.js';
-import dotenv from 'dotenv';
-import { connectDB } from './src/db/database.js';
-import cors from 'cors';
-import cookieParser from 'cookie-parser';
-import { app, server } from './src/lib/socket.js';
-import path from 'path';
-import { fileURLToPath } from 'url';
 
 dotenv.config();
 const PORT = process.env.PORT || 5000;
@@ -30,7 +29,7 @@ app.use('/api/message', messageRoutes);
 if (process.env.NODE_ENV === "production") {
   app.use(express.static(path.join(__dirname, "../frontend/dist")));
 
-  app.get("*", (req, res) => {
+  app.get(/(.*)/, (req, res) => {
     res.sendFile(path.join(__dirname, "../frontend", "dist", "index.html"));
   });
 }
