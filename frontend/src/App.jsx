@@ -11,12 +11,12 @@ import {Loader}  from "lucide-react"
 import { Toaster } from "react-hot-toast";
 
 function App() {
-  const { authUser, checkAuth, isCheckingAuth} = useAuthStore()
+  const { authUser, checkAuth, isCheckingAuth, onlineUsers} = useAuthStore()
   useEffect(()=>{
     checkAuth()
+    console.log({onlineUsers});
   },[checkAuth])
 
-  console.log({authUser});
   if(isCheckingAuth && !authUser) return (
     <div className="flex items-center justify-center h-screen">
       <Loader className="size-10 animate-spin" />
@@ -24,7 +24,7 @@ function App() {
   )
   
   return (
-   <>
+   <div data-theme="retro">
    <Navbar />
    <Routes>
     <Route path="/" element={authUser? <HomePage /> : <Navigate to={"/login"} />} />
@@ -34,7 +34,7 @@ function App() {
     <Route path="/profile" element={authUser? <ProfilePage />: <Navigate to={"/login"} />} />
    </Routes>
     <Toaster />
-   </>
+   </div>
   );
 }
 

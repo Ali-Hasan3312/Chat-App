@@ -54,7 +54,8 @@ export const signup = async(req, res)=>{
 
 export const login = async(req, res)=>{
   const { email, password} = req.body;
-
+  console.log("Request reveived");
+  
   try {
     if(!email || !password){
       res.status(401).json({
@@ -111,7 +112,7 @@ export const logout = (req, res)=>{
 
 export const updateProfile = async(req, res)=>{
   try {
-    const { profilePic } = req.body;
+    const  profilePic  = req.file;
     const userId = req.user._id
     if(!profilePic){
       return res.status(401).json({
@@ -120,8 +121,7 @@ export const updateProfile = async(req, res)=>{
       })
     }
     let image;
-    const cloud_image = await uploadOnCloudinary(profilePic)
-     console.log("Cloud image response:", cloud_image);
+    const cloud_image = await uploadOnCloudinary(req.file?.path)
    if(!cloud_image) {
        return res.status(400).json({
         success: false,
@@ -144,17 +144,13 @@ export const updateProfile = async(req, res)=>{
    })
   } catch (error) {
     console.log("Error in profile update controller");
-    return res.status(500).json({ message: "Internal server error" });
+    return res.status(500).json({ message: error.message });
   }
 }
 
 export const checkAuth = async(req, res)=>{
   try {
-    return res.status(201).json({
-      success: true,
-      message: "User fetched successfully",
-      user: req.user
-    })
+    return res.status(201).json(req.user)
   } catch (error) {
     console.log("Error in checkAuth controller");
     return res.status(500).json({ message: "Internal server error" });  

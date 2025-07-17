@@ -13,7 +13,7 @@ const SignupPage = () => {
     password: ''
   })
 
-  const { signUp, isSigningUp} = useAuthStore()
+  const { signup, isSigningUp} = useAuthStore()
 
   const validateForm = ()=>{
   if (!formData.fullName.trim()) return toast.error("Full name is required");
@@ -30,7 +30,7 @@ const SignupPage = () => {
 
     const success = validateForm();
 
-    // if (success === true) signup(formData);
+    if (success === true) signup(formData);
   }
   console.log("Password Show:", showPassword);
   

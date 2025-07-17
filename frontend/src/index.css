@@ -1,0 +1,6 @@
+@import "tailwindcss";
+@plugin "daisyui";
+
+@theme {
+    --color-myCustom-fludg: '#f542e6'
+}
