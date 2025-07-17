@@ -1,4 +1,5 @@
 import { uploadOnCloudinary } from "../lib/cloudinary.js";
+import { getReceiverSocketId, io } from "../lib/socket.js";
 import Message from "../models/message.js";
 import User from "../models/user.js";
 
@@ -48,13 +49,13 @@ export const getMessages = async(req, res)=>{
 
 export const sendMessage = async (req, res)=>{
     try {
-        const { text, image} = req.body;
+        const { text} = req.body;
         const {id: receiverId} = req.params;
         const senderId  = req.user._id;
         let imageUrl;
-        if(image){
+        if(req.file){
             // upload base64 image to cloudinary
-            const uploadResponse = await uploadOnCloudinary(image)
+            const uploadResponse = await uploadOnCloudinary(req.file?.path)
             imageUrl = uploadResponse.url
         }
         const newMessage = await Message.create({
@@ -64,8 +65,10 @@ export const sendMessage = async (req, res)=>{
             image: imageUrl
         })
 
-        // todo: realtime functionality goes here => socket.io
-
+        const receiverSocketId = getReceiverSocketId(receiverId)
+        if(receiverSocketId){
+            io.to(receiverSocketId).emit("newMessage", newMessage)
+        }
         res.status(201).json(newMessage)
     } catch (error) {
     console.error("Error in send message controller",error.message)
