@@ -9,6 +9,8 @@ import { app, server } from './src/lib/socket.js';
 import path from "path"
 dotenv.config();
 
+const __dirname = path.resolve();
+
 app.use(express.json())
 app.use(cors({
     origin: 'http://localhost:5173',
