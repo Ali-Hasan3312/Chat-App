@@ -1,34 +1,44 @@
 import express from 'express';
 import authRoutes from './src/routes/auth.js';
-import messageRoutes from "./src/routes/message.js"
-import dotenv from 'dotenv'
+import messageRoutes from './src/routes/message.js';
+import dotenv from 'dotenv';
 import { connectDB } from './src/db/database.js';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import { app, server } from './src/lib/socket.js';
-import path from "path"
+import path from 'path';
+import { fileURLToPath } from 'url';
+
 dotenv.config();
 
-const __dirname = path.resolve();
+// Fix for __dirname in ESM
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
-app.use(express.json())
+// Middlewares
+app.use(express.json());
 app.use(cors({
-    origin: 'http://localhost:5173',
-    credentials: true
+  origin: process.env.CLIENT_URL || 'http://localhost:5173',
+  credentials: true
 }));
-app.use(cookieParser())
-const port = process.env.PORT || 5000
-app.use('/api/auth', authRoutes)
-app.use('/api/message', messageRoutes)
+app.use(cookieParser());
 
-if(process.env.NODE_ENV !=="development"){
-   app.use(express.static(path.join(__dirname, "../frontend/dist")))
+// Routes
+app.use('/api/auth', authRoutes);
+app.use('/api/message', messageRoutes);
 
-   app.get("*", (req, res)=>{
-    res.sendFile(path.join(__dirname, "../frontend", "dist", "index.html"))
-   })
+// ✅ Serve frontend in production
+if (process.env.NODE_ENV === 'production') {
+  const frontendPath = path.join(__dirname, '../frontend/dist');
+  app.use(express.static(frontendPath));
+
+  app.get('*', (req, res) => {
+    res.sendFile(path.join(frontendPath, 'index.html'));
+  });
 }
-server.listen(port, ()=>{
-    console.log(`Server is running on port ${port}`);
-    connectDB();
-})
+
+const port = process.env.PORT || 5000;
+server.listen(port, () => {
+  console.log(`✅ Server running on port ${port}`);
+  connectDB();
+});
